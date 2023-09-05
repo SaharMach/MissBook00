@@ -13,7 +13,8 @@ export const bookService = {
     // getNextCarId,
     getDefaultFilter,
     addReview,
-    deleteReview
+    deleteReview,
+    addGoogleBook
 }
 
 function query(filterBy = {})  {
@@ -34,6 +35,10 @@ function query(filterBy = {})  {
 
 function get(bookId) {
     return storageService.get(STORAGE_KEY, bookId)
+        .then(book => {
+            book = _setNextPrevBookId(book)
+            return book
+        })
 }
 
 function remove(bookId) {
@@ -578,3 +583,47 @@ function deleteReview(bookId,reviewId){
       })
 }
 
+
+function _setNextPrevBookId(book) {
+  return storageService.query(STORAGE_KEY).then((books) => {
+      const bookIdx = books.findIndex((currBook) => currBook.id === book.id)
+      const nextBook = books[bookIdx + 1] ? books[bookIdx + 1] : books[0]
+      const prevBook = books[bookIdx - 1] ? books[bookIdx - 1] : books[books.length - 1]
+      book.nextBookId = nextBook.id
+      book.prevBookId = prevBook.id
+      return book
+  })
+}
+
+
+function addGoogleBook(book){
+  console.log('book:', book)
+    const formattedBook = convertGoogleToAppFormat(book)
+    console.log('formattedBook:', formattedBook)
+    return storageService.post(STORAGE_KEY, formattedBook)
+}
+
+function convertGoogleToAppFormat(googleBook){
+  return {
+    id: utilService.makeId(),
+    title: googleBook.title,
+    subtitle: googleBook.subtitle || '',
+    authors: googleBook.authors || [], 
+    publishedDate: googleBook.publishedDate,
+    description: googleBook.description || '', 
+    pageCount: googleBook.pageCount,
+    categories: googleBook.categories || [], 
+    thumbnail: googleBook.imageLinks.thumbnail || googleBook.imageLinks.smallThumbNail ||  '',
+    language: googleBook.language,
+    reviews: [],
+    listPrice: {
+        amount: (googleBook.saleInfo && googleBook.saleInfo.listPrice && googleBook.saleInfo.listPrice.amount) 
+                ? googleBook.saleInfo.listPrice.amount 
+                : 'NotForSale',
+        currencyCode: (googleBook.saleInfo && googleBook.saleInfo.listPrice && googleBook.saleInfo.listPrice.currencyCode) 
+                      ? googleBook.saleInfo.listPrice.currencyCode 
+                      : '', 
+        isOnSale: googleBook.saleInfo && googleBook.saleInfo.saleability === "FOR_SALE" 
+    }
+}
+}

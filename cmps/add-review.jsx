@@ -1,9 +1,10 @@
 import { bookService } from "../services/book.service.js";
 import { utilService } from "../services/util.service.js";
+import { SurveyIndex } from "./SurveyIndex.jsx";
 const {useState,useEffect} = React
 
 export function AddReview({book, onAddingReview}){
-    
+    const [ratingType,setRatingType] = useState('')
     const [review, setReview] = useState({
         id: utilService.makeId(),
         fullname: '',
@@ -44,6 +45,10 @@ export function AddReview({book, onAddingReview}){
     }
 
     
+    function handleChangeRating(value) {
+        setReview(prevReview => ({ ...prevReview, rating: value }));
+    }
+
     const {fullname, rating, readAt} = review
     return (
         <section className="add-review">
@@ -51,10 +56,23 @@ export function AddReview({book, onAddingReview}){
                 <label htmlFor="fullname">Fullname: </label>
                 <input onChange={handleChange} value={fullname} type="text" name="fullname" id="fullname" />
 
-                <label htmlFor="rating"> Rating: </label>
-                <select name="rating" id="rating" value={rating} onChange={handleChange}>
-                    {['⭐️', '⭐️⭐️', '⭐️⭐️⭐️', '⭐️⭐️⭐️⭐️', '⭐️⭐️⭐️⭐️⭐️'].map(rate => <option key={rate} value={rate}>{rate}</option>)}
-                </select>
+                <div className="rating-selection">
+                    <label>
+                        <input type="radio" value="SelectBox" checked={ratingType === 'SelectBox'} onChange={(e) => setRatingType(e.target.value)} />
+                        Select Rating
+                    </label>
+                    <label>
+                        <input type="radio" value="TextBox" checked={ratingType === 'TextBox'} onChange={(e) => setRatingType(e.target.value)} />
+                        Textbox Rating
+                    </label>
+                    <label>
+                        <input type="radio" value="RateByStars" checked={ratingType === 'RateByStars'} onChange={(e) => setRatingType(e.target.value)} />
+                        Star Rating
+                    </label>
+                </div>
+
+                <SurveyIndex ratingType={ratingType} onChangeVal={handleChangeRating} />
+                
                 
                 <label htmlFor="readAt"> readAt: </label>
                 <input onChange={handleChange} value={readAt} type="date" name="readAt" id="readAt" />
@@ -64,3 +82,7 @@ export function AddReview({book, onAddingReview}){
         </section>
     )
 }
+
+
+
+

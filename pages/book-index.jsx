@@ -44,6 +44,7 @@ export function BookIndex(){
                 <React.Fragment>
                     <BookFilter filterBy={filterBy} onSetFilterBy={onSetFilterBy}/>
                     <Link to="/books/edit"><button>Add Book</button></Link>
+                    <Link to="/bookAdd"><button>Add book from Google</button></Link>
                     <BookList books={books} onRemoveBook={onRemoveBook}/>
                 </React.Fragment>
             }

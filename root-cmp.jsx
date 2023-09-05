@@ -3,13 +3,14 @@ const Router = ReactRouterDOM.HashRouter
 const { Routes, Route, Navigate } = ReactRouterDOM
 
 
+import { Home } from './pages/home.jsx'
 import { AboutUs } from './pages/about-us.jsx'
 import { BookIndex } from './pages/book-index.jsx'
 import { AppHeader } from './cmps/app-header.jsx'
 import { BookDetails } from './pages/book-details.jsx'
 import { BookEdit } from './pages/book-edit.jsx'
 import { AddReview } from './cmps/add-review.jsx'
-import { Home } from './pages/home.jsx'
+import { BookAdd } from './pages/BookAdd.jsx'
 
 
 export function App() {
@@ -27,7 +28,8 @@ export function App() {
                         <Route path="review" element={<AddReview />}> </Route>    
                     </Route> 
                     <Route path="/books/edit/:bookId" element={<BookEdit />} />
-                    <Route path="/books/edit" element={<BookEdit />} />                   
+                    <Route path="/books/edit" element={<BookEdit />} /> 
+                    <Route path="/bookAdd" element={<BookAdd />}/>                  
                 </Routes>
             </main>
         

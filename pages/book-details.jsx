@@ -5,6 +5,7 @@ import { LongTxt } from "../cmps/longtxt.jsx";
 import { utilService } from "../services/util.service.js";
 import { AddReview } from "../cmps/add-review.jsx";
 
+
 export function BookDetails(){
     const [book, setBook] = useState(null)
     const params = useParams()
@@ -82,10 +83,15 @@ export function BookDetails(){
     function onBack(){
         navigate('/books')
     }
+
     if(!book) return <div>Loading...</div>
     return (
         <section className="main-layout">
             <section className="book-container">
+                <div>
+                    <button><Link to={`/books/${book.prevBookId}`}>Previous Book</Link></button> |
+                    <button><Link to={`/books/${book.nextBookId}`}>Next Book</Link></button>
+                </div>
                 <section className='book-details'> 
                     <h2>{book.title}</h2>
                     <h1>Author: {book.authors}</h1>
